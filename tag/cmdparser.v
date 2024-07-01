@@ -17,8 +17,8 @@ module cmdparser (reset, bitin, bitclk, cmd_out, packet_complete_out, cmd_comple
   output [1:0] m;
   output       trext, dr;
 
-  reg        packet_complete_out;
-  wire [8:0] cmd_out;
+  reg        packet_complete_out;//Signals that a packet is completely received.
+ wire [8:0] cmd_out;//parsed command output.
   wire       packet_complete, cmd_complete;
   reg  [7:0] cmd;
   wire [7:0] new_cmd;
@@ -39,7 +39,7 @@ module cmdparser (reset, bitin, bitclk, cmd_out, packet_complete_out, cmd_comple
       count <= count + 6'd1;
       packet_complete_out <= packet_complete;  // clear up glitching?
 
-      if(cmd_out[2] && count == 4) dr    <= bitin;
+     if(cmd_out[2] && count == 4) dr    <= bitin;//if 3rd bit of parsed output is 1 when the count is 4, dr will be given bitin value. 
       if(cmd_out[2] && count == 5) m[1]  <= bitin;
       if(cmd_out[2] && count == 6) m[0]  <= bitin;
       if(cmd_out[2] && count == 7) trext <= bitin;
@@ -47,7 +47,7 @@ module cmdparser (reset, bitin, bitclk, cmd_out, packet_complete_out, cmd_comple
   end
    
   
-  assign cmd_complete = (cmd_out > 0);
+ assign cmd_complete = (cmd_out > 0);//if cmd is greater than 0, cmd_complete = 1
   
   // we are gating this signal, so update it 1 count early
   //   causing the complete to occur on the last bit pos edge.
